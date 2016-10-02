@@ -3,8 +3,6 @@ package org.webonise.springboot.diningphilosophers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.webonise.springboot.Fork;
-import org.webonise.springboot.Philosopher;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -19,11 +17,6 @@ public class Application {
    @Qualifier("forks")
    Fork[] forks;
 
-   //Philosopher objects are created as a separate threads.
-   // Also to avoid deadlock condition,
-   // at the beginning the last philosopher is trying to
-   // grabbing left fork before right fork and all
-   // other philosophers are trying to grab right fork first.
    @Autowired
    @Qualifier("philosophers")
    Philosopher[] philosophers;
@@ -34,7 +27,6 @@ public class Application {
 
    public void start() {
       System.out.println("\n=====Dining Philosophers Problem=====\n");
-
 
       for (int i = 0; i < SIZE; i++) {
          if (i < (SIZE - 1)) {

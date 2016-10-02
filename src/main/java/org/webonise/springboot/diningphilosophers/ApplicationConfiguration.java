@@ -3,8 +3,6 @@ package org.webonise.springboot.diningphilosophers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.webonise.springboot.Fork;
-import org.webonise.springboot.Philosopher;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;

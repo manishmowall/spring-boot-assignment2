@@ -8,14 +8,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Main implements CommandLineRunner {
    @Autowired
-   org.webonise.springboot.diningphilosophers.Application application;
+   Application application;
 
    @Override
    public void run(String... strings) throws Exception {
+
       application.start();
    }
 
    public static void main(String[] args) {
+
       SpringApplication.run(Main.class, args);
    }
 }

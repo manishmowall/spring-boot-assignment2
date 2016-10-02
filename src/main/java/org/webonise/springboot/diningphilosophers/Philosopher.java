@@ -1,6 +1,5 @@
 package org.webonise.springboot.diningphilosophers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +15,8 @@ public class Philosopher implements Runnable {
    private boolean runStatus;
 
    //not using final , spring will handle it.
-   @Autowired
-   private org.webonise.springboot.diningphilosophers.Fork left;
-
-   @Autowired
-   private org.webonise.springboot.diningphilosophers.Fork right;
+   private Fork left;
+   private Fork right;
 
    public Philosopher() {
       runStatus = true;
@@ -30,11 +26,11 @@ public class Philosopher implements Runnable {
       this.id = id;
    }
 
-   public void setLeft(org.webonise.springboot.diningphilosophers.Fork left) {
+   public void setLeft(Fork left) {
       this.left = left;
    }
 
-   public void setRight(org.webonise.springboot.diningphilosophers.Fork right) {
+   public void setRight(Fork right) {
       this.right = right;
    }
 
