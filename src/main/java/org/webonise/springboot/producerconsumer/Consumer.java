@@ -1,19 +1,30 @@
-package org.webonise.producerconsumer;
+package org.webonise.springboot.producerconsumer;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
+@Scope("prototype")
 class Consumer implements Runnable {
    private static final int maxDelayTimeInMilliSeconds = 5000;
    private static final int minDelayTimeInMilliSeconds = 1000;
-   private final List<Integer> sharedQueue;
-   private final String name;
+   private List<Integer> sharedQueue;
+   private String name;
    private boolean runStatus;
 
-   public Consumer(List<Integer> sharedQueue, String name) {
+   public Consumer() {
 
-      this.name = name;
-      this.sharedQueue = sharedQueue;
       runStatus = true;
+   }
+
+   public void setSharedQueue(List<Integer> sharedQueue) {
+      this.sharedQueue = sharedQueue;
+   }
+
+   public void setName(String name) {
+      this.name = name;
    }
 
    @Override

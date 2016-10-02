@@ -1,39 +1,63 @@
-package org.webonise.producerconsumer;
+package org.webonise.springboot.producerconsumer;
 
-import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 //here we are having one producer and two consumers.
+@Component
 public class Application {
-   private static final int DelayTimeInMilliSeconds = 15000;
+   private static final int delayTimeInMilliSeconds = 15000;
+   private static final int threadPoolAwaitInMilliSeconds = 20000;
 
-   public static void main(String args[]) {
+   //this is queue which is shared among the threads.
+   @Autowired
+   @Qualifier("arrayList")
+   List<Integer> sharedQueue;
+
+   @Autowired
+   @Qualifier("producer")
+   Producer producer;
+
+   @Autowired
+   @Qualifier("consumer")
+   Consumer consumer1;
+
+   @Autowired
+   @Qualifier("consumer")
+   Consumer consumer2;
+
+   @Autowired
+   @Qualifier("threadPoolExecutor")
+   ThreadPoolExecutor threadPoolExecutor;
+
+   public void start() {
 
       System.out.println("\n======Producer Consumer Problem======\n");
-      //this is queue which is shared among the threads.
-      List<Integer> sharedQueue = new ArrayList<>();
 
-      Producer producer = new Producer(sharedQueue, "Producer");
-      Thread producerThread = new Thread(producer);
+      producer.setSharedQueue(sharedQueue);
+      producer.setName("Producer");
+      threadPoolExecutor.execute(producer);
 
-      Consumer consumer1 = new Consumer(sharedQueue, "Consumer1");
-      Consumer consumer2 = new Consumer(sharedQueue, "Consumer2");
-      Thread consumerThread1 = new Thread(consumer1);
-      Thread consumerThread2 = new Thread(consumer2);
-      producerThread.start();
-      consumerThread1.start();
-      consumerThread2.start();
+      consumer1.setSharedQueue(sharedQueue);
+      consumer1.setName("Consumer1");
+      threadPoolExecutor.execute(consumer1);
+
+      consumer2.setSharedQueue(sharedQueue);
+      consumer2.setName("Consumer2");
+      threadPoolExecutor.execute(consumer2);
 
       try {
-         TimeDelay.getDelay(DelayTimeInMilliSeconds);
+         TimeDelay.getDelay(delayTimeInMilliSeconds);
          producer.stop();
-         producerThread.join();
-
          consumer1.stop();
-         consumerThread1.join();
-
          consumer2.stop();
-         consumerThread2.join();
+         threadPoolExecutor.shutdown();
+         threadPoolExecutor.awaitTermination(threadPoolAwaitInMilliSeconds, TimeUnit.MILLISECONDS);
       } catch (InterruptedException interruptedException) {
          interruptedException.printStackTrace();
       }

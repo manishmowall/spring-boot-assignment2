@@ -1,9 +1,12 @@
-package org.webonise.producerconsumer;
+package org.webonise.springboot.producerconsumer;
+
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-public class TimeDelay {
+@Component
+public final class TimeDelay {
 
    public static void getDelay(int time) throws InterruptedException {
 
