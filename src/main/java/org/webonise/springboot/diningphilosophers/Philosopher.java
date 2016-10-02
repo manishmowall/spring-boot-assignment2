@@ -1,26 +1,47 @@
-package org.webonise.diningphilosopherswithinterruption;
+package org.webonise.springboot.diningphilosophers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+@Component
+@Scope("prototype")
 public class Philosopher implements Runnable {
    private static final int maxPauseTime = 3000;
    private static final int minPauseTime = 1000;
-   private final Fork left;
-   private final Fork right;
-   private final int id;
+   private int id;
+   private boolean runStatus;
 
-   public Philosopher(Fork left, Fork right, int id) {
+   //not using final , spring will handle it.
+   @Autowired
+   private org.webonise.springboot.diningphilosophers.Fork left;
 
-      this.left = left;
-      this.right = right;
+   @Autowired
+   private org.webonise.springboot.diningphilosophers.Fork right;
+
+   public Philosopher() {
+      runStatus = true;
+   }
+
+   public void setId(int id) {
       this.id = id;
+   }
+
+   public void setLeft(org.webonise.springboot.diningphilosophers.Fork left) {
+      this.left = left;
+   }
+
+   public void setRight(org.webonise.springboot.diningphilosophers.Fork right) {
+      this.right = right;
    }
 
    public void run() {
 
       try {
-         while (!Thread.currentThread().isInterrupted()) {
+         while (runStatus) {
             thinking();
             grabLeftFork();
             grabRightFork();
@@ -28,18 +49,13 @@ public class Philosopher implements Runnable {
             dropForks();
          }
       } catch (InterruptedException interruptedexception) {
-         //if condition to check whether IterruptedException is caused by Thread itself(using interrupt()) or sleep class.
-         if (!Thread.currentThread().isInterrupted()) {
-              /*if thread interrupt is called when thread is sleep or wait, sleep and wait will clear thread interrupt
-              * status and raise its own InterruptedException. So then we have to set the interrupt status again by calling
-              * interrupt() function.*/
-            Thread.currentThread().interrupt();
-            System.out.println("Phisolopher " + id + " " + "stops");
-         } else {
-            //To print stack trace when Iterrupt exception is raised by sleep.
-            System.out.println(interruptedexception.getStackTrace());
-         }
+         System.out.println(interruptedexception.getStackTrace());
       }
+   }
+
+   public void stopPhilosopher() {
+
+      runStatus = false;
    }
 
    private void thinking() throws InterruptedException {

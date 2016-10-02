@@ -1,18 +1,16 @@
-package org.webonise.concurrentmodificationexception.exceptioncreation;
+package org.webonise.springboot.concurrentmodificationexception.exceptioncreation;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 public class ApplicationConfiguration {
-
-    @Bean
-    @Scope("prototype")
-    public List<Integer> arrayList() {
-        return new ArrayList<>();
-    }
+   @Bean
+   @Scope("prototype")
+   public ArrayList<Integer> arrayList() {
+      return new ArrayList<>();
+   }
 }

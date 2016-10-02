@@ -1,4 +1,4 @@
-package org.webonise.diningphilosophers;
+package org.webonise.springboot.diningphilosophers;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
