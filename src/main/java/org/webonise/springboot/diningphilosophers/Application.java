@@ -1,0 +1,58 @@
+package org.webonise.springboot.diningphilosophers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+//By default Singleton Class
+@Component
+public class Application {
+   //SIZE - no of forks/philosophers and made public static to access in Application Configuration class
+   public static final int SIZE = 5;
+
+   @Autowired
+   @Qualifier("forks")
+   Fork[] forks;
+
+   @Autowired
+   @Qualifier("philosophers")
+   Philosopher[] philosophers;
+
+   @Autowired
+   @Qualifier("threadPoolExecutor")
+   ThreadPoolExecutor threadPoolExecutor;
+
+   public void start() {
+      System.out.println("\n=====Dining Philosophers Problem=====\n");
+
+      for (int i = 0; i < SIZE; i++) {
+         if (i < (SIZE - 1)) {
+            philosophers[i].setId(i);
+            philosophers[i].setLeft(forks[i]);
+            philosophers[i].setRight(forks[i + 1]);
+            threadPoolExecutor.execute(philosophers[i]);
+         } else {
+            philosophers[i].setId(i);
+            philosophers[i].setLeft(forks[0]);
+            philosophers[i].setRight(forks[i]);
+            threadPoolExecutor.execute(philosophers[i]);
+         }
+      }
+
+      try {
+         TimeUnit.MILLISECONDS.sleep(10000);
+         for (int i = 0; i < SIZE; i++) {
+            philosophers[i].stopPhilosopher();
+         }
+         threadPoolExecutor.shutdown();
+         threadPoolExecutor.awaitTermination(20000, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException interruptedException) {
+         interruptedException.printStackTrace();
+      }
+
+      System.out.println("Main Thread Exits");
+   }
+}
